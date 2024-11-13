@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { AppService } from './app.service';
 import { APIResponse, Author, Book, Tag } from './app.entity';
 import { ApiParam, ApiQuery } from '@nestjs/swagger';
@@ -36,6 +36,11 @@ export class AppController {
     };
   }
 
+  @Get('books/:id')
+  getBookById(@Param('id', ParseIntPipe) id: number): APIResponse<Book> {
+    return { data: this.appService.getBookByID(id) };
+  }
+
   @Get('authors')
   @ApiQuery({
     name: 'page',
@@ -58,8 +63,13 @@ export class AppController {
     @Query('page') page: number,
     @Query('size') size: number,
     @Query('search') search: string,
-  ): Author[] {
-    return this.appService.getAuthors(page, size, search);
+  ): APIResponse<Author[]> {
+    return { data: this.appService.getAuthors(page, size, search) };
+  }
+
+  @Get('authors/:id')
+  getAuthorById(@Param('id', ParseIntPipe) id: number): APIResponse<Author> {
+    return { data: this.appService.getAuthorByID(id) };
   }
 
   @Get('tags')
@@ -84,7 +94,12 @@ export class AppController {
     @Query('page') page: number,
     @Query('size') size: number,
     @Query('search') search: string,
-  ): Tag[] {
-    return this.appService.getTags(page, size, search);
+  ): APIResponse<Tag[]> {
+    return { data: this.appService.getTags(page, size, search) };
+  }
+
+  @Get('tags/:id')
+  getTagByID(@Param('id', ParseIntPipe) id: number): APIResponse<Tag> {
+    return { data: this.appService.getTagByID(id) };
   }
 }
