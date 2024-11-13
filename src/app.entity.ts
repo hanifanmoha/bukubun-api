@@ -1,21 +1,21 @@
 export interface Author {
-  id: number;
+  id: string;
   name: string;
   bio: string;
 }
 
 export interface Tag {
-  id: number;
+  id: string;
   name: string;
 }
 
 export interface Book {
-  id: number;
+  id: string;
   title: string;
   published_year: number;
-  author_id: number;
+  author_id: string;
   author?: Author;
-  tag_ids: number[];
+  tag_ids: string[];
   tags?: Tag[];
 }
 

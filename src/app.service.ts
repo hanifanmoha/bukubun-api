@@ -33,7 +33,7 @@ export class AppService {
     return results;
   }
 
-  getBookByID(id: number): Book | undefined {
+  getBookByID(id: string): Book | undefined {
     const book = data.books.find((book) => book.id === id);
     const author = data.authors.find((a) => a.id === book.author_id);
     const tags = book.tag_ids.map((tag_id) =>
@@ -61,7 +61,7 @@ export class AppService {
     return paginated;
   }
 
-  getAuthorByID(id: number): Author | undefined {
+  getAuthorByID(id: string): Author | undefined {
     const author = data.authors.find((a) => a.id === id);
     return author;
   }
@@ -81,7 +81,7 @@ export class AppService {
     return paginated;
   }
 
-  getTagByID(id: number): Tag | undefined {
+  getTagByID(id: string): Tag | undefined {
     const tag = data.tags.find((t) => t.id === id);
     return tag;
   }

@@ -37,7 +37,7 @@ export class AppController {
   }
 
   @Get('books/:id')
-  getBookById(@Param('id', ParseIntPipe) id: number): APIResponse<Book> {
+  getBookById(@Param('id') id: number): APIResponse<Book> {
     return { data: this.appService.getBookByID(id) };
   }
 
@@ -68,7 +68,7 @@ export class AppController {
   }
 
   @Get('authors/:id')
-  getAuthorById(@Param('id', ParseIntPipe) id: number): APIResponse<Author> {
+  getAuthorById(@Param('id') id: number): APIResponse<Author> {
     return { data: this.appService.getAuthorByID(id) };
   }
 
@@ -99,7 +99,7 @@ export class AppController {
   }
 
   @Get('tags/:id')
-  getTagByID(@Param('id', ParseIntPipe) id: number): APIResponse<Tag> {
+  getTagByID(@Param('id') id: number): APIResponse<Tag> {
     return { data: this.appService.getTagByID(id) };
   }
 }
