@@ -4,7 +4,7 @@ import data from './app.data';
 import { getByPagination, getFiltered } from './app.helper';
 import { v4 as uuidv4 } from 'uuid';
 
-const IS_MODIFY = true;
+const IS_MODIFY = process.env.NODE_ENV === 'development';
 
 @Injectable()
 export class AppService {
