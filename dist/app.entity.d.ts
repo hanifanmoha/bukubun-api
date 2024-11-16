@@ -1,7 +1,7 @@
 export interface Author {
     id: string;
     name: string;
-    bio: string;
+    bio?: string;
 }
 export interface Tag {
     id: string;

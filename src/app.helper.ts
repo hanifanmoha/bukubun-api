@@ -1,7 +1,6 @@
 export function getByPagination<T>(data: T[], page: number, size: number): T[] {
   const start = size * (page - 1);
   const end = size * page;
-  console.log(start, end, data.slice(start, end));
   return data.slice(start, end);
 }
 

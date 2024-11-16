@@ -1,7 +1,19 @@
-import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import { APIResponse, Author, Book, Tag } from './app.entity';
 import { ApiParam, ApiQuery } from '@nestjs/swagger';
+import { CreateBookDTO } from './dto/create-book.dto';
+import { CreateAuthorDTO } from './dto/create-author.dto';
+import { CreateTagDTO } from './dto/create-tag.dto';
 
 @Controller()
 export class AppController {
@@ -30,7 +42,6 @@ export class AppController {
     @Query('size') size: number,
     @Query('search') search: string,
   ): APIResponse<Book[]> {
-    console.log(page, size, search);
     return {
       data: this.appService.getBooks(page, size, search),
     };
@@ -39,6 +50,20 @@ export class AppController {
   @Get('books/:id')
   getBookById(@Param('id') id: string): APIResponse<Book> {
     return { data: this.appService.getBookByID(id) };
+  }
+
+  @Post('books')
+  postBook(@Body() reqBody: CreateBookDTO): APIResponse<Book> {
+    return {
+      data: this.appService.createBook(CreateBookDTO.generate(reqBody)),
+    };
+  }
+
+  @Delete('books/:id')
+  deleteBook(@Param('id') id: string): APIResponse<Book> {
+    return {
+      data: this.appService.deleteBookByID(id),
+    };
   }
 
   @Get('authors')
@@ -72,6 +97,20 @@ export class AppController {
     return { data: this.appService.getAuthorByID(id) };
   }
 
+  @Post('authors')
+  postAuthor(@Body() reqBody: CreateAuthorDTO) {
+    return {
+      data: this.appService.createAuthor(CreateAuthorDTO.generate(reqBody)),
+    };
+  }
+
+  @Delete('authors/:id')
+  deleteAuthor(@Param('id') id: string): APIResponse<Author> {
+    return {
+      data: this.appService.deleteAuthorByID(id),
+    };
+  }
+
   @Get('tags')
   @ApiQuery({
     name: 'page',
@@ -101,5 +140,19 @@ export class AppController {
   @Get('tags/:id')
   getTagByID(@Param('id') id: string): APIResponse<Tag> {
     return { data: this.appService.getTagByID(id) };
+  }
+
+  @Post('tags')
+  postTag(@Body() reqBody: CreateTagDTO) {
+    return {
+      data: this.appService.createTag(CreateTagDTO.generate(reqBody)),
+    };
+  }
+
+  @Delete('tags/:id')
+  deleteTag(@Param('id') id: string): APIResponse<Tag> {
+    return {
+      data: this.appService.deleteTagByID(id),
+    };
   }
 }

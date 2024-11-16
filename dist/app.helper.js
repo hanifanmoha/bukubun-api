@@ -5,7 +5,6 @@ exports.getFiltered = getFiltered;
 function getByPagination(data, page, size) {
     const start = size * (page - 1);
     const end = size * page;
-    console.log(start, end, data.slice(start, end));
     return data.slice(start, end);
 }
 function getFiltered(array, search, keys) {
