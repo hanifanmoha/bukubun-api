@@ -3,17 +3,21 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
-  ParseIntPipe,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { APIResponse, Author, Book, Tag } from './app.entity';
-import { ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiBody, ApiQuery } from '@nestjs/swagger';
 import { CreateBookDTO } from './dto/create-book.dto';
 import { CreateAuthorDTO } from './dto/create-author.dto';
 import { CreateTagDTO } from './dto/create-tag.dto';
+import { UpdateBookDTO } from './dto/update-book.dto';
+import { UpdateAuthorDTO } from './dto/update-author.dto';
+import { UpdateTagDTO } from './dto/update-tag.dto';
 
 @Controller()
 export class AppController {
@@ -44,18 +48,33 @@ export class AppController {
   ): APIResponse<Book[]> {
     return {
       data: this.appService.getBooks(page, size, search),
+      statusCode: HttpStatus.OK,
     };
   }
 
   @Get('books/:id')
   getBookById(@Param('id') id: string): APIResponse<Book> {
-    return { data: this.appService.getBookByID(id) };
+    return { data: this.appService.getBookByID(id), statusCode: HttpStatus.OK };
   }
 
   @Post('books')
+  @ApiBody({ type: CreateBookDTO })
   postBook(@Body() reqBody: CreateBookDTO): APIResponse<Book> {
     return {
       data: this.appService.createBook(CreateBookDTO.generate(reqBody)),
+      statusCode: HttpStatus.CREATED,
+    };
+  }
+
+  @Put('books/:id')
+  @ApiBody({ type: UpdateBookDTO })
+  updateBook(
+    @Param('id') id: string,
+    @Body() reqBody: UpdateBookDTO,
+  ): APIResponse<Book> {
+    return {
+      data: this.appService.updateBook(id, UpdateBookDTO.generate(reqBody)),
+      statusCode: HttpStatus.OK,
     };
   }
 
@@ -63,6 +82,7 @@ export class AppController {
   deleteBook(@Param('id') id: string): APIResponse<Book> {
     return {
       data: this.appService.deleteBookByID(id),
+      statusCode: HttpStatus.OK,
     };
   }
 
@@ -89,18 +109,38 @@ export class AppController {
     @Query('size') size: number,
     @Query('search') search: string,
   ): APIResponse<Author[]> {
-    return { data: this.appService.getAuthors(page, size, search) };
+    return {
+      data: this.appService.getAuthors(page, size, search),
+      statusCode: HttpStatus.OK,
+    };
   }
 
   @Get('authors/:id')
   getAuthorById(@Param('id') id: string): APIResponse<Author> {
-    return { data: this.appService.getAuthorByID(id) };
+    return {
+      data: this.appService.getAuthorByID(id),
+      statusCode: HttpStatus.OK,
+    };
   }
 
   @Post('authors')
-  postAuthor(@Body() reqBody: CreateAuthorDTO) {
+  @ApiBody({ type: CreateAuthorDTO })
+  postAuthor(@Body() reqBody: CreateAuthorDTO): APIResponse<Author> {
     return {
       data: this.appService.createAuthor(CreateAuthorDTO.generate(reqBody)),
+      statusCode: HttpStatus.CREATED,
+    };
+  }
+
+  @Put('authors/:id')
+  @ApiBody({ type: UpdateAuthorDTO })
+  updateAuthor(
+    @Param('id') id: string,
+    @Body() reqBody: UpdateAuthorDTO,
+  ): APIResponse<Author> {
+    return {
+      data: this.appService.updateAuthor(id, UpdateAuthorDTO.generate(reqBody)),
+      statusCode: HttpStatus.OK,
     };
   }
 
@@ -108,6 +148,7 @@ export class AppController {
   deleteAuthor(@Param('id') id: string): APIResponse<Author> {
     return {
       data: this.appService.deleteAuthorByID(id),
+      statusCode: HttpStatus.OK,
     };
   }
 
@@ -134,18 +175,35 @@ export class AppController {
     @Query('size') size: number,
     @Query('search') search: string,
   ): APIResponse<Tag[]> {
-    return { data: this.appService.getTags(page, size, search) };
+    return {
+      data: this.appService.getTags(page, size, search),
+      statusCode: HttpStatus.OK,
+    };
   }
 
   @Get('tags/:id')
   getTagByID(@Param('id') id: string): APIResponse<Tag> {
-    return { data: this.appService.getTagByID(id) };
+    return { data: this.appService.getTagByID(id), statusCode: HttpStatus.OK };
   }
 
   @Post('tags')
-  postTag(@Body() reqBody: CreateTagDTO) {
+  @ApiBody({ type: CreateTagDTO })
+  postTag(@Body() reqBody: CreateTagDTO): APIResponse<Tag> {
     return {
       data: this.appService.createTag(CreateTagDTO.generate(reqBody)),
+      statusCode: HttpStatus.CREATED,
+    };
+  }
+
+  @Put('tags/:id')
+  @ApiBody({ type: UpdateTagDTO })
+  updateTag(
+    @Param('id') id: string,
+    @Body() reqBody: UpdateTagDTO,
+  ): APIResponse<Tag> {
+    return {
+      data: this.appService.updateTag(id, UpdateTagDTO.generate(reqBody)),
+      statusCode: HttpStatus.OK,
     };
   }
 
@@ -153,6 +211,7 @@ export class AppController {
   deleteTag(@Param('id') id: string): APIResponse<Tag> {
     return {
       data: this.appService.deleteTagByID(id),
+      statusCode: HttpStatus.OK,
     };
   }
 }

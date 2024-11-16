@@ -1,8 +1,8 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Author } from 'src/app.entity';
 
-export class CreateAuthorDTO {
-  static generate(req: CreateAuthorDTO): Author {
+export class UpdateAuthorDTO {
+  static generate(req: UpdateAuthorDTO): Author {
     return {
       id: null,
       name: req.name,

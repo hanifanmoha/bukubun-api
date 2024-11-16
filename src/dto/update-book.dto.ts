@@ -1,14 +1,14 @@
 import {
-  IsNotEmpty,
   IsString,
   IsArray,
   IsUUID,
   IsNumber,
+  IsNotEmpty,
 } from 'class-validator';
 import { Book } from 'src/app.entity';
 
-export class CreateBookDTO {
-  static generate(req: CreateBookDTO): Book {
+export class UpdateBookDTO {
+  static generate(req: UpdateBookDTO): Book {
     return {
       id: null,
       title: req.title,

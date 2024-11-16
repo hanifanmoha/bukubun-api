@@ -4,7 +4,7 @@ import data from './app.data';
 import { getByPagination, getFiltered } from './app.helper';
 import { v4 as uuidv4 } from 'uuid';
 
-const IS_REAL_INSERT = true;
+const IS_MODIFY = true;
 
 @Injectable()
 export class AppService {
@@ -34,6 +34,10 @@ export class AppService {
 
   getBookByID(id: string): Book | undefined {
     const book = data.books.find((book) => book.id === id);
+    if (!book) {
+      throw new NotFoundException(`Book with ID ${id} not found`);
+    }
+
     const author = data.authors.find((a) => a.id === book.author_id);
     const tags = book.tag_ids.map((tag_id) =>
       data.tags.find((t) => t.id === tag_id),
@@ -42,7 +46,8 @@ export class AppService {
   }
 
   createBook(book: Book): Book {
-    book.id = uuidv4();
+    const id = uuidv4();
+    book.id = id;
 
     const { author_id, tag_ids } = book;
 
@@ -59,11 +64,42 @@ export class AppService {
       return tag;
     });
 
-    if (IS_REAL_INSERT) {
+    if (IS_MODIFY) {
       data.books.push(book);
     }
 
-    return book;
+    return this.getBookByID(book.id);
+  }
+
+  updateBook(id: string, book: Book): Book {
+    const index = data.books.findIndex((book) => book.id === id);
+
+    if (index === -1) {
+      throw new NotFoundException(`Book with ID ${id} not found`);
+    }
+
+    book.id = id;
+
+    const { author_id, tag_ids } = book;
+
+    const author = data.authors.find((a) => a.id === author_id);
+    if (!author) {
+      throw new NotFoundException(`Author with ID ${author_id} not found`);
+    }
+
+    const tags = tag_ids.map((tagId) => {
+      const tag = data.tags.find((t) => t.id === tagId);
+      if (!tag) {
+        throw new NotFoundException(`Tag with ID ${tagId} not found`);
+      }
+      return tag;
+    });
+
+    if (IS_MODIFY) {
+      data.books[index] = book;
+    }
+
+    return this.getBookByID(id);
   }
 
   deleteBookByID(id: string): Book {
@@ -73,9 +109,10 @@ export class AppService {
       throw new NotFoundException(`Book with ID ${id} not found`);
     }
 
-    const book = data.books[index];
-    data.books.splice(index, 1);
-    console.log(data.books.length);
+    const book = this.getBookByID(id);
+    if (IS_MODIFY) {
+      data.books.splice(index, 1);
+    }
     return book;
   }
 
@@ -100,17 +137,37 @@ export class AppService {
 
   getAuthorByID(id: string): Author | undefined {
     const author = data.authors.find((a) => a.id === id);
+    if (!author) {
+      throw new NotFoundException(`Author with ID ${id} not found`);
+    }
     return author;
   }
 
   createAuthor(author: Author): Author {
-    author.id = uuidv4();
+    const id = uuidv4();
+    author.id = id;
 
-    if (IS_REAL_INSERT) {
+    if (IS_MODIFY) {
       data.authors.push(author);
     }
 
-    return author;
+    return this.getAuthorByID(id);
+  }
+
+  updateAuthor(id: string, author: Author): Author {
+    const index = data.authors.findIndex((author) => author.id === id);
+
+    if (index === -1) {
+      throw new NotFoundException(`Author with ID ${id} not found`);
+    }
+
+    author.id = id;
+
+    if (IS_MODIFY) {
+      data.authors[index] = author;
+    }
+
+    return this.getAuthorByID(id);
   }
 
   deleteAuthorByID(id: string): Author {
@@ -120,8 +177,10 @@ export class AppService {
       throw new NotFoundException(`Author with ID ${id} not found`);
     }
 
-    const author = data.authors[index];
-    data.authors.splice(index, 1);
+    const author = this.getAuthorByID(id);
+    if (IS_MODIFY) {
+      data.authors.splice(index, 1);
+    }
     return author;
   }
 
@@ -142,17 +201,37 @@ export class AppService {
 
   getTagByID(id: string): Tag | undefined {
     const tag = data.tags.find((t) => t.id === id);
+    if (!tag) {
+      throw new NotFoundException(`Tag with ID ${id} not found`);
+    }
     return tag;
   }
 
   createTag(tag: Tag): Tag {
-    tag.id = uuidv4();
+    const id = uuidv4();
+    tag.id = id;
 
-    if (IS_REAL_INSERT) {
+    if (IS_MODIFY) {
       data.tags.push(tag);
     }
 
-    return tag;
+    return this.getTagByID(id);
+  }
+
+  updateTag(id: string, tag: Tag): Tag {
+    const index = data.tags.findIndex((tag) => tag.id === id);
+
+    if (index === -1) {
+      throw new NotFoundException(`Tag with ID ${id} not found`);
+    }
+
+    tag.id = id;
+
+    if (IS_MODIFY) {
+      data.authors[index] = tag;
+    }
+
+    return this.getTagByID(id);
   }
 
   deleteTagByID(id: string): Author {
@@ -162,8 +241,11 @@ export class AppService {
       throw new NotFoundException(`Tag with ID ${id} not found`);
     }
 
-    const tag = data.tags[index];
-    data.tags.splice(index, 1);
+    const tag = this.getTagByID(id);
+
+    if (IS_MODIFY) {
+      data.tags.splice(index, 1);
+    }
     return tag;
   }
 }

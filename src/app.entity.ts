@@ -21,4 +21,5 @@ export interface Book {
 
 export interface APIResponse<T> {
   data: T;
+  statusCode: number;
 }
